@@ -16,7 +16,7 @@ export function Introduction() {
     <div className="flex flex-col gap-4">
       <div className="flex flex-row justify-between">
         <h1 className="text-2xl font-bold">Icon Picker</h1>
-        <Link href="https://github.com/alan-crts/shadcn-iconpicker">
+        <Link href="https://github.com/emretuna/shadcn-iconpicker-tabler">
           <Button variant="outline">
             <IconBrandGithub className="w-4 h-4" />
             View on GitHub
@@ -31,7 +31,7 @@ export function Introduction() {
         preview={iconPickerPreview}
         code={iconPickerCode}
         language="tsx"
-        v0Url={"https://icon-picker.alan-courtois.fr/r/icon-picker-example"}
+        v0Url={"https://github.com/emretuna/shadcn-iconpicker-tabler"}
       />
     </div>
   );

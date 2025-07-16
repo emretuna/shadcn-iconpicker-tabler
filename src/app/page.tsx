@@ -22,8 +22,8 @@ export default function Home() {
       <footer className="text-sm text-muted-foreground text-center pb-4">
         <p>
           Made with ❤️ by{" "}
-          <a href="https://github.com/alan-crts" className="underline">
-            Alan
+          <a href="https://github.com/emretuna" className="underline">
+            Emre Tuna
           </a>
         </p>
       </footer>

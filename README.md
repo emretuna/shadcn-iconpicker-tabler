@@ -3,7 +3,7 @@
 A sleek and customizable icon picker component for React, built with shadcn/ui and Lucide Icons.
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/alan-crts/shadcn-iconpicker/refs/heads/main/public/preview.gif" width="600" />
+  <img src="https://raw.githubusercontent.com/emretuna/shadcn-iconpicker-tabler/refs/heads/main/public/preview.gif" width="600" />
 </div>
 
 ## Features
@@ -19,22 +19,22 @@ A sleek and customizable icon picker component for React, built with shadcn/ui a
 
 ### Using npm
 ```shell
-npx shadcn@latest add "https://icon-picker.alan-courtois.fr/r/icon-picker"
+npx shadcn@latest add "https://github.com/emretuna/shadcn-iconpicker-tabler"
 ```
 
 ### Using pnpm
 ```shell
-pnpm dlx shadcn@latest add "https://icon-picker.alan-courtois.fr/r/icon-picker"
+pnpm dlx shadcn@latest add "https://github.com/emretuna/shadcn-iconpicker-tabler"
 ```
 
 ### Using Yarn
 ```shell
-npx shadcn@latest add "https://icon-picker.alan-courtois.fr/r/icon-picker"
+npx shadcn@latest add "https://github.com/emretuna/shadcn-iconpicker-tabler"
 ```
 
 ### Using Bun
 ```shell
-bunx shadcn@latest add "https://icon-picker.alan-courtois.fr/r/icon-picker"
+bunx shadcn@latest add "https://github.com/emretuna/shadcn-iconpicker-tabler"
 ```
 
 ## Usage
@@ -69,7 +69,7 @@ export default function Home() {
 
 ### Clone the repository
 ```shell
-git clone https://github.com/alan-crts/shadcn-iconpicker.git
+git clone https://github.com/emretuna/shadcn-iconpicker-tabler.git
 ```
 
 ### Install dependencies
@@ -84,7 +84,7 @@ npm run dev
 
 ## License
 
-MIT © [Alan Courtois](https://github.com/alan-crts)
+MIT © [Emre Tuna](https://github.com/emretuna)
 
 ## Acknowledgments
 

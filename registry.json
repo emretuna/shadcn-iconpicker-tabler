@@ -8,7 +8,7 @@
       "type": "registry:ui",
       "title": "Icon Picker",
       "description": "An icon picker component with lucide icons.",
-      "author": "alan-crts",
+      "author": "emretuna",
       "files": [
         {
           "path": "registry/ui/icon-picker.tsx",
@@ -40,9 +40,9 @@
       "type": "registry:ui",
       "title": "Icon Picker Example",
       "description": "An example of the icon picker component.",
-      "author": "alan-crts",
+      "author": "emretuna",
       "registryDependencies": [
-        "https://icon-picker.alan-courtois.fr/r/icon-picker"
+        "https://github.com/emretuna/shadcn-iconpicker-tabler"
       ],
       "files": [
         {

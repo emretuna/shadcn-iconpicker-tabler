@@ -2,7 +2,7 @@ import { IconPicker } from "../../../registry/ui/icon-picker";
 import { PreviewCode } from "../preview-code";
 
 export function IconPickerExample() {
-  return <IconPicker defaultValue="github" />;
+  return <IconPicker defaultValue="brand-github" />;
 }
 
 export function IconPickerDefault() {
@@ -10,8 +10,10 @@ export function IconPickerDefault() {
 import { IconPicker } from "@/components/ui/icon-picker";
 
 export function IconPickerExample() {
-    return <IconPicker defaultValue="github" />;
+    return <IconPicker defaultValue="brand-github" />;
 }`;
 
-  return <PreviewCode code={code} preview={<IconPickerExample />} language="tsx" />;
+  return (
+    <PreviewCode code={code} preview={<IconPickerExample />} language="tsx" />
+  );
 }

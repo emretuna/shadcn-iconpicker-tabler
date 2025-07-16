@@ -18,12 +18,12 @@ export const metadata: Metadata = {
   title: "Shadcn Icon Picker - Beautiful Icon Selection Component",
   description: "A modern, accessible, and customizable icon picker component built with Shadcn UI, Lucide React and Tanstack Virtual. Perfect for React applications needing a beautiful icon selection interface.",
   keywords: ["shadcn", "icon picker", "react component", "ui component", "icon selection", "next.js", "typescript", "tanstack virtual", "lucide react", "fuse.js"],
-  authors: [{ name: "Alan Courtois", url: "https://github.com/alan-crts" }],
+  authors: [{ name: "Emre Tuna", url: "https://github.com/emretuna" }],
   openGraph: {
     title: "Shadcn Icon Picker",
     description: "A modern, accessible, and customizable icon picker component built with Shadcn UI, Lucide React and Tanstack Virtual.",
     type: "website",
-    url: "https://icon-picker.alan-courtois.fr",
+    url: "https://github.com/emretuna/shadcn-iconpicker-tabler",
     siteName: "Shadcn Icon Picker",
   },
   twitter: {
