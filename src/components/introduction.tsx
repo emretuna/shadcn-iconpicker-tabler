@@ -5,8 +5,8 @@ import { IconPicker } from "../../registry/ui/icon-picker";
 import Link from "next/link";
 
 export function Introduction() {
-    const iconPickerPreview = <IconPicker />;
-    const iconPickerCode = `import { IconPicker } from "@/components/ui/iconPicker";
+  const iconPickerPreview = <IconPicker />;
+  const iconPickerCode = `import { IconPicker } from "@/components/ui/iconPicker";
   
   export default function Home() {
     return <IconPicker />;
@@ -25,7 +25,7 @@ export function Introduction() {
       </div>
       <p className="text-sm text-muted-foreground">
         A simple icon picker component that allows you to pick an icon from a
-        list of lucide icons.
+        list of Tabler icons.
       </p>
       <PreviewCode
         preview={iconPickerPreview}

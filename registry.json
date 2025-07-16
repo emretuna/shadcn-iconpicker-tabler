@@ -7,7 +7,7 @@
       "name": "icon-picker",
       "type": "registry:ui",
       "title": "Icon Picker",
-      "description": "An icon picker component with lucide icons.",
+      "description": "An icon picker component with tabler icons.",
       "author": "emretuna",
       "files": [
         {
@@ -22,7 +22,7 @@
         }
       ],
       "dependencies": [
-        "lucide-react@^0.471.0",
+        "@tabler/icons-react@^3.34.0",
         "@tanstack/react-virtual",
         "fuse.js",
         "usehooks-ts"
@@ -54,3 +54,4 @@
     }
   ]
 }
+

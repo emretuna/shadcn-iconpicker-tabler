@@ -1,6 +1,6 @@
 # Shadcn Icon Picker
 
-A sleek and customizable icon picker component for React, built with shadcn/ui and Lucide Icons.
+A sleek and customizable icon picker component for React, built with shadcn/ui and Tabler Icons.
 
 <div align="center">
   <img src="https://raw.githubusercontent.com/emretuna/shadcn-iconpicker-tabler/refs/heads/main/public/preview.gif" width="600" />
@@ -11,28 +11,32 @@ A sleek and customizable icon picker component for React, built with shadcn/ui a
 - 🎨 Modern and responsive UI
 - 🔍 Real-time icon search
 - ⚡️ Progressive icon loading
-- 🎯 Full Lucide icons support
+- 🎯 Full Tabler icons support
 - 🌗 Dark mode compatible
 - 🎛️ Highly customizable
 
 ## Installation
 
 ### Using npm
+
 ```shell
 npx shadcn@latest add "https://github.com/emretuna/shadcn-iconpicker-tabler"
 ```
 
 ### Using pnpm
+
 ```shell
 pnpm dlx shadcn@latest add "https://github.com/emretuna/shadcn-iconpicker-tabler"
 ```
 
 ### Using Yarn
+
 ```shell
 npx shadcn@latest add "https://github.com/emretuna/shadcn-iconpicker-tabler"
 ```
 
 ### Using Bun
+
 ```shell
 bunx shadcn@latest add "https://github.com/emretuna/shadcn-iconpicker-tabler"
 ```
@@ -41,7 +45,7 @@ bunx shadcn@latest add "https://github.com/emretuna/shadcn-iconpicker-tabler"
 
 ```tsx
 import { IconPicker } from "@/components/ui/iconPicker";
-  
+
 export default function Home() {
   return <IconPicker />;
 }
@@ -49,35 +53,38 @@ export default function Home() {
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `value` | `IconName` | - | The controlled value of the selected icon |
-| `defaultValue` | `IconName` | - | The default value of the selected icon |
-| `onValueChange` | `(value: IconName) => void` | - | Callback invoked when an icon is selected |
-| `open` | `boolean` | - | Controlled open state of the picker |
-| `defaultOpen` | `boolean` | `false` | Default open state of the picker |
-| `onOpenChange` | `(open: boolean) => void` | - | Callback invoked when the open state changes |
-| `children` | `ReactNode` | - | The trigger element to open the icon picker |
-| `searchable` | `boolean` | `true` | Whether the icon picker is searchable |
-| `searchPlaceholder` | `string` | "Search for an icon..." | The placeholder for the search input |
-| `triggerPlaceholder` | `string` | "Select an icon" | The text displayed on the default trigger button when no icon is selected |
-| `iconsList` | `IconList` | all lucide icons | The list of icons to display in the picker |
-| `categorized` | `boolean` | `true` | Display icons in categories and add categories buttons to scroll to the desired category |
-| `modal` | `boolean` | `false` | Whether the icon picker is being rendered in a modal |
+| Prop                 | Type                        | Default                 | Description                                                                              |
+| -------------------- | --------------------------- | ----------------------- | ---------------------------------------------------------------------------------------- |
+| `value`              | `IconName`                  | -                       | The controlled value of the selected icon                                                |
+| `defaultValue`       | `IconName`                  | -                       | The default value of the selected icon                                                   |
+| `onValueChange`      | `(value: IconName) => void` | -                       | Callback invoked when an icon is selected                                                |
+| `open`               | `boolean`                   | -                       | Controlled open state of the picker                                                      |
+| `defaultOpen`        | `boolean`                   | `false`                 | Default open state of the picker                                                         |
+| `onOpenChange`       | `(open: boolean) => void`   | -                       | Callback invoked when the open state changes                                             |
+| `children`           | `ReactNode`                 | -                       | The trigger element to open the icon picker                                              |
+| `searchable`         | `boolean`                   | `true`                  | Whether the icon picker is searchable                                                    |
+| `searchPlaceholder`  | `string`                    | "Search for an icon..." | The placeholder for the search input                                                     |
+| `triggerPlaceholder` | `string`                    | "Select an icon"        | The text displayed on the default trigger button when no icon is selected                |
+| `iconsList`          | `IconList`                  | all tabler icons        | The list of icons to display in the picker                                               |
+| `categorized`        | `boolean`                   | `true`                  | Display icons in categories and add categories buttons to scroll to the desired category |
+| `modal`              | `boolean`                   | `false`                 | Whether the icon picker is being rendered in a modal                                     |
 
 ## Development
 
 ### Clone the repository
+
 ```shell
 git clone https://github.com/emretuna/shadcn-iconpicker-tabler.git
 ```
 
 ### Install dependencies
+
 ```shell
 npm install
 ```
 
 ### Start development server
+
 ```shell
 npm run dev
 ```
@@ -89,5 +96,6 @@ MIT © [Emre Tuna](https://github.com/emretuna)
 ## Acknowledgments
 
 - [shadcn/ui](https://ui.shadcn.com) for the UI components
-- [Lucide](https://lucide.dev) for the icons
+- [Tabler](https://tabler.io/icons) for the icons
 - [Next.js](https://nextjs.org) for the framework
+- [Alan](https://github.com/alan-crts/) for the awesome work
