@@ -113,6 +113,8 @@ const IconPicker = React.forwardRef<
   const [isLoading, setIsLoading] = useState(true);
   const [loadedIconsCount, setLoadedIconsCount] = useState(50);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [loadedCategories, setLoadedCategories] = useState<string[]>([]);
   
   const iconsToUse = useMemo(() => iconsList || icons, [iconsList, icons]);
   
@@ -126,32 +128,29 @@ const IconPicker = React.forwardRef<
   }, [iconsToUse]);
 
   const allFilteredIcons = useMemo(() => {
-    if (search.trim() === "") {
-      return iconsToUse;
-    }
+    let icons = iconsToUse;
     
-    const results = fuseInstance.search(search.toLowerCase().trim());
-    return results.map(result => result.item);
-  }, [search, iconsToUse, fuseInstance]);
-
-  const filteredIcons = useMemo(() => {
-    // When searching, show all results (search results are usually fewer)
+    // Apply search filter
     if (search.trim() !== "") {
-      return allFilteredIcons;
+      const results = fuseInstance.search(search.toLowerCase().trim());
+      icons = results.map(result => result.item);
     }
     
-    // When not searching, apply pagination
-    return allFilteredIcons.slice(0, loadedIconsCount);
-  }, [allFilteredIcons, loadedIconsCount, search]);
-
-  const categorizedIcons = useMemo(() => {
-    if (!categorized || search.trim() !== "") {
-      return [{ name: "All Icons", icons: filteredIcons }];
+    // Apply category filter if a category is selected
+    if (selectedCategory && selectedCategory !== "All Icons") {
+      icons = icons.filter(icon => 
+        icon.categories && icon.categories.includes(selectedCategory)
+      );
     }
+    
+    return icons;
+  }, [search, selectedCategory, iconsToUse, fuseInstance]);
 
+  // Get all categories with their icons
+  const allCategorizedIcons = useMemo(() => {
     const categories = new Map<string, IconData[]>();
     
-    filteredIcons.forEach(icon => {
+    allFilteredIcons.forEach(icon => {
       if (icon.categories && icon.categories.length > 0) {
         icon.categories.forEach(category => {
           if (!categories.has(category)) {
@@ -171,7 +170,21 @@ const IconPicker = React.forwardRef<
     return Array.from(categories.entries())
       .map(([name, icons]) => ({ name, icons }))
       .sort((a, b) => a.name.localeCompare(b.name));
-  }, [filteredIcons, categorized, search]);
+  }, [allFilteredIcons]);
+
+  const categorizedIcons = useMemo(() => {
+    if (!categorized || search.trim() !== "" || selectedCategory) {
+      return [{ name: selectedCategory || "All Icons", icons: allFilteredIcons }];
+    }
+
+    // When browsing all icons, load categories progressively
+    const categoriesToShow = allCategorizedIcons.slice(0, Math.ceil(loadedIconsCount / 50));
+    
+    return categoriesToShow.map(category => ({
+      name: category.name,
+      icons: category.icons
+    }));
+  }, [allCategorizedIcons, categorized, search, selectedCategory, loadedIconsCount, allFilteredIcons]);
 
   const virtualItems = useMemo(() => {
     const items: Array<{
@@ -235,8 +248,9 @@ const IconPicker = React.forwardRef<
 
   const handleOpenChange = useCallback((newOpen: boolean) => {
     setSearch("");
-    // Reset pagination when opening/closing
+    // Reset pagination and category when opening/closing
     setLoadedIconsCount(50);
+    setSelectedCategory(null);
     
     if (open === undefined) {
       setIsOpen(newOpen)
@@ -262,9 +276,11 @@ const IconPicker = React.forwardRef<
   const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
     
-    // Reset pagination when search changes
+    // Reset pagination and category when search changes
     if (e.target.value.trim() === "") {
       setLoadedIconsCount(50);
+    } else {
+      setSelectedCategory(null); // Clear category when searching
     }
     
     if (parentRef.current) {
@@ -288,21 +304,48 @@ const IconPicker = React.forwardRef<
   const categoryButtons = useMemo(() => {
     if (!categorized || search.trim() !== "") return null;
     
-    return categorizedIcons.map(category => (
-      <Button 
-        key={category.name}
-        variant={"outline"}
-        size="sm"
-        className="text-xs"
-        onClick={(e) => {
-          e.stopPropagation();
-          scrollToCategory(category.name);
-        }}
-      >
-        {category.name.charAt(0).toUpperCase() + category.name.slice(1)}
-      </Button>
-    ));
-  }, [categorizedIcons, scrollToCategory, categorized, search]);
+    // Show all available categories for filtering
+    const allCategories = new Set<string>();
+    iconsToUse.forEach(icon => {
+      if (icon.categories && icon.categories.length > 0) {
+        icon.categories.forEach(category => allCategories.add(category));
+      }
+    });
+    
+    const categories = Array.from(allCategories).sort();
+    
+    return (
+      <>
+        <Button 
+          key="all"
+          variant={selectedCategory === null ? "default" : "outline"}
+          size="sm"
+          className="text-xs"
+          onClick={(e) => {
+            e.stopPropagation();
+            setSelectedCategory(null);
+            setLoadedIconsCount(50); // Reset pagination when changing category
+          }}
+        >
+          All Icons
+        </Button>
+        {categories.map(category => (
+          <Button 
+            key={category}
+            variant={selectedCategory === category ? "default" : "outline"}
+            size="sm"
+            className="text-xs"
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelectedCategory(category);
+            }}
+          >
+            {category.charAt(0).toUpperCase() + category.slice(1)}
+          </Button>
+        ))}
+      </>
+    );
+  }, [categorized, search, selectedCategory, iconsToUse]);
 
   const renderIcon = useCallback((icon: IconData) => (
     <TooltipProvider key={icon.name}>
@@ -323,17 +366,19 @@ const IconPicker = React.forwardRef<
   ), [handleIconClick]);
 
   const loadMoreIcons = useCallback(() => {
-    if (search.trim() !== "" || isLoadingMore) return;
+    if (search.trim() !== "" || selectedCategory || isLoadingMore) return;
     
-    const hasMore = loadedIconsCount < allFilteredIcons.length;
+    const currentCategories = Math.ceil(loadedIconsCount / 50);
+    const hasMore = currentCategories < allCategorizedIcons.length;
+    
     if (hasMore) {
       setIsLoadingMore(true);
       setTimeout(() => {
-        setLoadedIconsCount(prev => Math.min(prev + 50, allFilteredIcons.length));
+        setLoadedIconsCount(prev => prev + 50);
         setIsLoadingMore(false);
       }, 300);
     }
-  }, [search, isLoadingMore, loadedIconsCount, allFilteredIcons.length]);
+  }, [search, selectedCategory, isLoadingMore, loadedIconsCount, allCategorizedIcons.length]);
 
   const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
     const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
@@ -345,7 +390,7 @@ const IconPicker = React.forwardRef<
   }, [loadMoreIcons]);
 
   const renderVirtualContent = useCallback(() => {
-    if (filteredIcons.length === 0) {
+    if (categorizedIcons.length === 0 || categorizedIcons.every(cat => cat.icons.length === 0)) {
       return (
         <div className="text-center text-gray-500">
           No icon found
@@ -401,7 +446,7 @@ const IconPicker = React.forwardRef<
             </div>
           );
         })}
-        {isLoadingMore && (
+        {isLoadingMore && !selectedCategory && search.trim() === "" && (
           <div className="flex justify-center items-center py-2">
             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900"></div>
             <span className="ml-2 text-sm text-gray-600">Loading more icons...</span>
@@ -409,7 +454,7 @@ const IconPicker = React.forwardRef<
         )}
       </div>
     );
-  }, [virtualizer, virtualItems, categorizedIcons, filteredIcons, renderIcon, isLoadingMore]);
+  }, [virtualizer, virtualItems, categorizedIcons, renderIcon, isLoadingMore, selectedCategory, search]);
 
   React.useEffect(() => {
     if (isPopoverVisible) {
