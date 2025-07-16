@@ -6,8 +6,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { LucideProps, LucideIcon } from 'lucide-react';
-import { DynamicIcon, IconName } from 'lucide-react/dynamic';
+import { IconProps } from '@tabler/icons-react';
+import { lazy, Suspense } from 'react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { iconsData } from "./icons-data";
 import { useVirtualizer, VirtualItem } from '@tanstack/react-virtual';
@@ -15,12 +15,19 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Fuse from 'fuse.js';
 import { useDebounceValue } from "usehooks-ts";
 
-export type IconData = typeof iconsData[number];
+export type IconData = {
+  name: string;
+  componentName: string;
+  categories: string[];
+  tags: string[];
+};
+
+export type IconName = string;
 
 interface IconPickerProps extends Omit<React.ComponentPropsWithoutRef<typeof PopoverTrigger>, 'onSelect' | 'onOpenChange'> {
-  value?: IconName
-  defaultValue?: IconName
-  onValueChange?: (value: IconName) => void
+  value?: string
+  defaultValue?: string
+  onValueChange?: (value: string) => void
   open?: boolean
   defaultOpen?: boolean
   onOpenChange?: (open: boolean) => void
@@ -32,7 +39,7 @@ interface IconPickerProps extends Omit<React.ComponentPropsWithoutRef<typeof Pop
   modal?: boolean
 }
 
-const IconRenderer = React.memo(({ name }: { name: IconName }) => {
+const IconRenderer = React.memo(({ name }: { name: string }) => {
   return <Icon name={name} />;
 });
 IconRenderer.displayName = "IconRenderer";
@@ -104,6 +111,8 @@ const IconPicker = React.forwardRef<
   const [isPopoverVisible, setIsPopoverVisible] = useState(false);
   const { icons } = useIconsData();
   const [isLoading, setIsLoading] = useState(true);
+  const [loadedIconsCount, setLoadedIconsCount] = useState(50);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   
   const iconsToUse = useMemo(() => iconsList || icons, [iconsList, icons]);
   
@@ -116,7 +125,7 @@ const IconPicker = React.forwardRef<
     });
   }, [iconsToUse]);
 
-  const filteredIcons = useMemo(() => {
+  const allFilteredIcons = useMemo(() => {
     if (search.trim() === "") {
       return iconsToUse;
     }
@@ -124,6 +133,16 @@ const IconPicker = React.forwardRef<
     const results = fuseInstance.search(search.toLowerCase().trim());
     return results.map(result => result.item);
   }, [search, iconsToUse, fuseInstance]);
+
+  const filteredIcons = useMemo(() => {
+    // When searching, show all results (search results are usually fewer)
+    if (search.trim() !== "") {
+      return allFilteredIcons;
+    }
+    
+    // When not searching, apply pagination
+    return allFilteredIcons.slice(0, loadedIconsCount);
+  }, [allFilteredIcons, loadedIconsCount, search]);
 
   const categorizedIcons = useMemo(() => {
     if (!categorized || search.trim() !== "") {
@@ -216,6 +235,9 @@ const IconPicker = React.forwardRef<
 
   const handleOpenChange = useCallback((newOpen: boolean) => {
     setSearch("");
+    // Reset pagination when opening/closing
+    setLoadedIconsCount(50);
+    
     if (open === undefined) {
       setIsOpen(newOpen)
     }
@@ -239,6 +261,11 @@ const IconPicker = React.forwardRef<
 
   const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
+    
+    // Reset pagination when search changes
+    if (e.target.value.trim() === "") {
+      setLoadedIconsCount(50);
+    }
     
     if (parentRef.current) {
       parentRef.current.scrollTop = 0;
@@ -294,6 +321,28 @@ const IconPicker = React.forwardRef<
       </Tooltip>
     </TooltipProvider>
   ), [handleIconClick]);
+
+  const loadMoreIcons = useCallback(() => {
+    if (search.trim() !== "" || isLoadingMore) return;
+    
+    const hasMore = loadedIconsCount < allFilteredIcons.length;
+    if (hasMore) {
+      setIsLoadingMore(true);
+      setTimeout(() => {
+        setLoadedIconsCount(prev => Math.min(prev + 50, allFilteredIcons.length));
+        setIsLoadingMore(false);
+      }, 300);
+    }
+  }, [search, isLoadingMore, loadedIconsCount, allFilteredIcons.length]);
+
+  const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+    
+    // Load more when user scrolls to bottom 10% of the content
+    if (scrollTop + clientHeight >= scrollHeight * 0.9) {
+      loadMoreIcons();
+    }
+  }, [loadMoreIcons]);
 
   const renderVirtualContent = useCallback(() => {
     if (filteredIcons.length === 0) {
@@ -352,9 +401,15 @@ const IconPicker = React.forwardRef<
             </div>
           );
         })}
+        {isLoadingMore && (
+          <div className="flex justify-center items-center py-2">
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900"></div>
+            <span className="ml-2 text-sm text-gray-600">Loading more icons...</span>
+          </div>
+        )}
       </div>
     );
-  }, [virtualizer, virtualItems, categorizedIcons, filteredIcons, renderIcon]);
+  }, [virtualizer, virtualItems, categorizedIcons, filteredIcons, renderIcon, isLoadingMore]);
 
   React.useEffect(() => {
     if (isPopoverVisible) {
@@ -411,6 +466,7 @@ const IconPicker = React.forwardRef<
           ref={parentRef}
           className="max-h-60 overflow-auto"
           style={{ scrollbarWidth: 'thin' }}
+          onScroll={handleScroll}
         >
           {isLoading ? (
             <IconsColumnSkeleton />
@@ -424,16 +480,65 @@ const IconPicker = React.forwardRef<
 });
 IconPicker.displayName = "IconPicker";
 
-interface IconProps extends Omit<LucideProps, 'ref'> {
-  name: IconName;
+interface IconComponentProps extends Omit<IconProps, 'ref'> {
+  name: string;
 }
 
 const Icon = React.forwardRef<
-  React.ComponentRef<LucideIcon>,
-  IconProps
->(({ name, ...props }, ref) => {
-  return <DynamicIcon name={name} {...props} ref={ref} />;
+  SVGSVGElement,
+  IconComponentProps
+>(({ name, ...props }, _ref) => {
+  const [IconComponent, setIconComponent] = useState<React.ComponentType<IconProps> | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadIcon = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        
+        // Find the icon data to get the component name
+        const iconData = iconsData.find(icon => icon.name === name);
+        if (!iconData) {
+          throw new Error(`Icon "${name}" not found`);
+        }
+        
+        // Dynamically import the icon component
+        const module = await import(`@tabler/icons-react`);
+        const IconComponent = (module as any)[iconData.componentName];
+        
+        if (!IconComponent) {
+          throw new Error(`Component "${iconData.componentName}" not found`);
+        }
+        
+        setIconComponent(() => IconComponent);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Unknown error');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadIcon();
+  }, [name]);
+
+  if (isLoading) {
+    return (
+      <div className="w-6 h-6 animate-pulse bg-gray-200 rounded" aria-label="Loading icon..." />
+    );
+  }
+
+  if (error || !IconComponent) {
+    return (
+      <div className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center text-xs text-gray-400" title={error || 'Icon not found'}>
+        ?
+      </div>
+    );
+  }
+
+  return <IconComponent {...props} />;
 });
 Icon.displayName = "Icon";
 
-export { IconPicker, Icon, type IconName };
+export { IconPicker, Icon };

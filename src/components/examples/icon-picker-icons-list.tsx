@@ -4,32 +4,38 @@ import { PreviewCode } from "../preview-code";
 export function IconPickerExample() {
     const icons: IconData[] = [
         {
-            name: "github",
+            name: "brand-github",
+            componentName: "IconBrandGithub",
             tags: ["git", "social"],
             categories: ["social"]
         },
         {
-            name: "twitter",
+            name: "brand-twitter",
+            componentName: "IconBrandTwitter",
             tags: ["X", "social"],
             categories: ["social"]
         },
         {
-            name: "facebook",
+            name: "brand-facebook",
+            componentName: "IconBrandFacebook",
             tags: ["meta", "fb", "social"],
             categories: ["social"]
         },
         {
-            name: "instagram",
+            name: "brand-instagram",
+            componentName: "IconBrandInstagram",
             tags: ["meta", "ig", "social"],
             categories: ["social"]
         },
         {
-            name: "linkedin",
+            name: "brand-linkedin",
+            componentName: "IconBrandLinkedin",
             tags: ["linkedin", "social"],
             categories: ["social"]
         },
         {
-            name: "youtube",
+            name: "brand-youtube",
+            componentName: "IconBrandYoutube",
             tags: ["yt", "social"],
             categories: ["social"]
         }
@@ -40,37 +46,43 @@ export function IconPickerExample() {
 
 export function IconPickerIconsList() {
   const code = `"use client";
-import { IconPicker, IconList } from "@/components/ui/icon-picker";
+import { IconPicker, IconData } from "@/components/ui/icon-picker";
 
 export function IconPickerExample() {
-    const icons: IconList = [
+    const icons: IconData[] = [
         {
-            name: "github",
+            name: "brand-github",
+            componentName: "IconBrandGithub",
             tags: ["git", "social"],
             categories: ["social"]
         },
         {
-            name: "twitter",
+            name: "brand-twitter",
+            componentName: "IconBrandTwitter",
             tags: ["X", "social"],
             categories: ["social"]
         },
         {
-            name: "facebook",
+            name: "brand-facebook",
+            componentName: "IconBrandFacebook",
             tags: ["meta", "fb", "social"],
             categories: ["social"]
         },
         {
-            name: "instagram",
+            name: "brand-instagram",
+            componentName: "IconBrandInstagram",
             tags: ["meta", "ig", "social"],
             categories: ["social"]
         },
         {
-            name: "linkedin",
+            name: "brand-linkedin",
+            componentName: "IconBrandLinkedin",
             tags: ["linkedin", "social"],
             categories: ["social"]
         },
         {
-            name: "youtube",
+            name: "brand-youtube",
+            componentName: "IconBrandYoutube",
             tags: ["yt", "social"],
             categories: ["social"]
         }

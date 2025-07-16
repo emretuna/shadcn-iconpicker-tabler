@@ -1,4 +1,4 @@
-import { Github } from "lucide-react";
+import { IconBrandGithub } from "@tabler/icons-react";
 import { PreviewCode } from "./preview-code";
 import { Button } from "./ui/button";
 import { IconPicker } from "../../registry/ui/icon-picker";
@@ -18,7 +18,7 @@ export function Introduction() {
         <h1 className="text-2xl font-bold">Icon Picker</h1>
         <Link href="https://github.com/alan-crts/shadcn-iconpicker">
           <Button variant="outline">
-            <Github className="w-4 h-4" />
+            <IconBrandGithub className="w-4 h-4" />
             View on GitHub
           </Button>
         </Link>

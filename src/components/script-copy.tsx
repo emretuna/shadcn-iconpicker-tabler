@@ -3,7 +3,7 @@
 import React from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
-import { Check, Copy } from "lucide-react"
+import { IconCheck, IconCopy } from "@tabler/icons-react"
 import { CodeBlock } from "./code-block"
 import type { Language } from "prism-react-renderer"
 
@@ -23,7 +23,7 @@ const CopyButton = ({ code }: { code: string }) => {
 
   return (
     <Button variant="outline" size="icon" onClick={copyToClipboard}>
-      {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+      {copied ? <IconCheck className="h-4 w-4" /> : <IconCopy className="h-4 w-4" />}
     </Button>
   )
 }
