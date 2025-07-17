@@ -3,7 +3,10 @@
 <div align="center">
     <img src="https://raw.githubusercontent.com/emretuna/shadcn-iconpicker-tabler/refs/heads/main/public/tabler.svg" width="600" />
 </div>
-A sleek and customizable icon picker component for React, built with shadcn/ui and Tabler Icons.
+
+<br />
+
+<i>A sleek and customizable icon picker component for React, built with shadcn/ui and Tabler Icons.</i>
 
 <div align="center">
   <img src="https://raw.githubusercontent.com/emretuna/shadcn-iconpicker-tabler/refs/heads/main/public/preview.gif" width="600" />
