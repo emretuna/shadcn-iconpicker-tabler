@@ -26,7 +26,7 @@
     "prism-react-renderer": "^2.4.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "shadcn": "^2.4.0-canary.6",
+    "shadcn": "^2.4.0-canary.20",
     "tailwind-merge": "^3.0.1",
     "usehooks-ts": "^3.1.1"
   },
