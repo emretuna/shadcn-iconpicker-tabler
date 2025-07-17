@@ -20,25 +20,25 @@ A sleek and customizable icon picker component for React, built with shadcn/ui a
 ### Using npm
 
 ```shell
-npx shadcn@latest add "https://github.com/emretuna/shadcn-iconpicker-tabler"
+npx shadcn@latest add "https://shadcn-iconpicker-tabler.vercel.app/r/icon-picker"
 ```
 
 ### Using pnpm
 
 ```shell
-pnpm dlx shadcn@latest add "https://github.com/emretuna/shadcn-iconpicker-tabler"
+pnpm dlx shadcn@latest add "https://shadcn-iconpicker-tabler.vercel.app/r/icon-picker"
 ```
 
 ### Using Yarn
 
 ```shell
-npx shadcn@latest add "https://github.com/emretuna/shadcn-iconpicker-tabler"
+npx shadcn@latest add "https://shadcn-iconpicker-tabler.vercel.app/r/icon-picker"
 ```
 
 ### Using Bun
 
 ```shell
-bunx shadcn@latest add "https://github.com/emretuna/shadcn-iconpicker-tabler"
+bunx shadcn@latest add "https://shadcn-iconpicker-tabler.vercel.app/r/icon-picker"
 ```
 
 ## Usage
