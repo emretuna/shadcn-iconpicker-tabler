@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { IconProps } from '@tabler/icons-react';
-import { lazy, Suspense } from 'react';
+
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { iconsData } from "./icons-data";
 import { useVirtualizer, VirtualItem } from '@tanstack/react-virtual';
@@ -114,7 +114,6 @@ const IconPicker = React.forwardRef<
   const [loadedIconsCount, setLoadedIconsCount] = useState(50);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [loadedCategories, setLoadedCategories] = useState<string[]>([]);
   
   const iconsToUse = useMemo(() => iconsList || icons, [iconsList, icons]);
   
@@ -216,17 +215,6 @@ const IconPicker = React.forwardRef<
     return items;
   }, [categorizedIcons]);
 
-  const categoryIndices = useMemo(() => {
-    const indices: Record<string, number> = {};
-    
-    virtualItems.forEach((item, index) => {
-      if (item.type === 'category') {
-        indices[categorizedIcons[item.categoryIndex].name] = index;
-      }
-    });
-    
-    return indices;
-  }, [virtualItems, categorizedIcons]);
 
   const parentRef = React.useRef<HTMLDivElement>(null);
 
@@ -265,13 +253,13 @@ const IconPicker = React.forwardRef<
         setIsLoading(false);
       }, 1);
     }
-  }, [open, onOpenChange, virtualizer]);
+  }, [open, onOpenChange, virtualizer, setSearch]);
 
   const handleIconClick = useCallback((iconName: IconName) => {
     handleValueChange(iconName);
     setIsOpen(false);
     setSearch("");
-  }, [handleValueChange]);
+  }, [handleValueChange, setSearch]);
 
   const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -288,18 +276,8 @@ const IconPicker = React.forwardRef<
     }
     
     virtualizer.scrollToOffset(0);
-  }, [virtualizer]);
+  }, [virtualizer, setSearch]);
 
-  const scrollToCategory = useCallback((categoryName: string) => {
-    const categoryIndex = categoryIndices[categoryName];
-    
-    if (categoryIndex !== undefined && virtualizer) {
-      virtualizer.scrollToIndex(categoryIndex, { 
-        align: 'start',
-        behavior: 'smooth'
-      });
-    }
-  }, [categoryIndices, virtualizer]);
 
   const categoryButtons = useMemo(() => {
     if (!categorized || search.trim() !== "") return null;
@@ -532,7 +510,7 @@ interface IconComponentProps extends Omit<IconProps, 'ref'> {
 const Icon = React.forwardRef<
   SVGSVGElement,
   IconComponentProps
->(({ name, ...props }, _ref) => {
+>(({ name, ...props }, ref) => {
   const [IconComponent, setIconComponent] = useState<React.ComponentType<IconProps> | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -550,8 +528,8 @@ const Icon = React.forwardRef<
         }
         
         // Dynamically import the icon component
-        const module = await import(`@tabler/icons-react`);
-        const IconComponent = (module as any)[iconData.componentName];
+        const iconModule = await import(`@tabler/icons-react`);
+        const IconComponent = (iconModule as any)[iconData.componentName] as React.ComponentType<IconProps>;
         
         if (!IconComponent) {
           throw new Error(`Component "${iconData.componentName}" not found`);
